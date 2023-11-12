@@ -8,17 +8,40 @@ export default function Todo() {
   const [input, setInput] = useState("");
   const [des, setDes] = useState("");
   const [todos, setTodos] = useState([]);
+  const [editId,setEditId] = useState(0)
 
   const HandleSubmit = (e) => {
     e.preventDefault();
+    if(editId)
+    {
+      const EditTodo = todos.find((item)=> item.id == editId)
+      const updatedArray = todos.map((t)=>
+        t.id === EditTodo.id ?(t={id:t.id,input,des}):{id:t.id,input:t.input,des:t.des}
+        )
+        setTodos(updatedArray)
+        setInput('')
+        setEditId(0)
+    }
 
-    if (input || des !== "") {
+    if (input && des !== "") {
       setTodos([{ id: `${input}-${Date.now()}`, input, des }, ...todos]);
-      console.log(todos);
     }
     setDes("");
     setInput("");
+    console.log(todos[0].id);
   };
+  const HandleDelete = (ID) => {
+    const deleteArray = todos.filter((item) => item.id !== ID);
+    setTodos([...deleteArray])
+    // console.log(deleteArray);
+  };
+
+  const HandleEdit = (ID) =>{
+    const edit = todos.find((item)=> item.id == ID)
+    setInput(edit.input)
+    setDes(edit.des)
+    setEditId(ID)
+  }
 
   return (
     <>
@@ -47,20 +70,27 @@ export default function Todo() {
               ></textarea>
 
               <button className="addBtn" type="submit">
-                <BsPlusCircleFill />
+              {editId?(<RiEditCircleFill/>):(<BsPlusCircleFill />)}
               </button>
             </form>
           </div>
         </div>
         <div className="todosItems">
           {todos.map((item, index) => (
-            <div key={index} className="singleTodo">
+            <div key={todos[index].id} className="singleTodo">
               <div className="todoBtn">
-                <button className="delete">
+                <button
+                  className="delete"
+                  onClick={() => HandleDelete(todos[index].id)}
+                >
                   <RiDeleteBinFill />
                 </button>
-                <button className="edit">
-                  <RiEditCircleFill />
+                <button 
+                className="edit"
+                onClick={()=>HandleEdit(todos[index].id)}
+                >
+                 <RiEditCircleFill/>
+                  
                 </button>
               </div>
               <p className="text">{item.input}</p>
@@ -70,7 +100,7 @@ export default function Todo() {
         </div>
         <div className="footer">
           <p className="footerText">
-            you have 15{" "}
+            you have {todos.length}
             <span>
               <FcTodoList />
             </span>{" "}

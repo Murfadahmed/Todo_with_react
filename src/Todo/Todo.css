@@ -69,10 +69,14 @@
 }
 .form .addBtn{
     border: none;
-    font-size: 29px;
+    font-size: 31px;
     background-color: transparent;
     /* font-weight: 900; */
     cursor: pointer;
+}
+.addBtn svg :hover{
+color:rgb(6, 81, 127) ;
+
 }
 .todosItems{
     width: 100%;
