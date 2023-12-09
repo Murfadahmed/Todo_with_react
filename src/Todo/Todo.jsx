@@ -14,13 +14,16 @@ export default function Todo() {
     e.preventDefault();
     if(editId)
     {
-      const EditTodo = todos.find((item)=> item.id == editId)
-      const updatedArray = todos.map((t)=>
-        t.id === EditTodo.id ?(t={id:t.id,input,des}):{id:t.id,input:t.input,des:t.des}
-        )
-        setTodos(updatedArray)
-        setInput('')
-        setEditId(0)
+     const EditTodo = todos.find((item) => item.id === editId);
+
+const updatedArray = todos.map((t) =>
+  t.id === editId ? { id: t.id, input, des } : t
+);
+
+setTodos(updatedArray);
+setInput('');
+setEditId(0);
+
     }
 
     if (input && des !== "") {
