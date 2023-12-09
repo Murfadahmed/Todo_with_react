@@ -8,43 +8,65 @@ export default function Todo() {
   const [input, setInput] = useState("");
   const [des, setDes] = useState("");
   const [todos, setTodos] = useState([]);
-  const [editId,setEditId] = useState(0)
+  const [editId, setEditId] = useState(0);
+
+  // const HandleSubmit = (e) => {
+  //   e.preventDefault();
+  //   if (editId) {
+  //     const EditTodo = todos.find((item) => item.id == editId);
+  //     const updatedArray = todos.map((t) =>
+  //       t.id === EditTodo.id
+  //         ? (t = { id: t.id, input })
+  //         : { id: t.id, input: t.input }
+  //     );
+  //     setTodos(updatedArray);
+  //     setInput("");
+  //     setEditId(0);
+  //   }
+
+  //   if (input !== "") {
+  //     setTodos([{ id: `${input}-${Date.now()}`, input,des }, ...todos]);
+  //   }
+  //   setDes("");
+  //   setInput("");
+  //   // console.log(todos[0].id);
+  // };
 
   const HandleSubmit = (e) => {
     e.preventDefault();
-    if(editId)
-    {
-     const EditTodo = todos.find((item) => item.id === editId);
 
-const updatedArray = todos.map((t) =>
-  t.id === editId ? { id: t.id, input, des } : t
-);
+    if (editId) {
+      // If in edit mode, update the existing todo
+      const updatedArray = todos.map((t) =>
+        t.id === editId ? { ...t, input, des } : t
+      );
 
-setTodos(updatedArray);
-setInput('');
-setEditId(0);
-
+      setTodos(updatedArray);
+      setInput("");
+      setDes("");
+      setEditId(0);
+    } else {
+      // If not in edit mode, add a new todo
+      if (input && des !== "") {
+        setTodos([{ id: `${input}-${Date.now()}`, input, des }, ...todos]);
+      }
+      setInput("");
+      setDes("");
     }
-
-    if (input && des !== "") {
-      setTodos([{ id: `${input}-${Date.now()}`, input, des }, ...todos]);
-    }
-    setDes("");
-    setInput("");
-    console.log(todos[0].id);
   };
+
   const HandleDelete = (ID) => {
     const deleteArray = todos.filter((item) => item.id !== ID);
-    setTodos([...deleteArray])
+    setTodos([...deleteArray]);
     // console.log(deleteArray);
   };
 
-  const HandleEdit = (ID) =>{
-    const edit = todos.find((item)=> item.id == ID)
-    setInput(edit.input)
-    setDes(edit.des)
-    setEditId(ID)
-  }
+  const HandleEdit = (ID) => {
+    const edit = todos.find((item) => item.id == ID);
+    setInput(edit.input);
+    setDes(edit.des);
+    setEditId(ID);
+  };
 
   return (
     <>
@@ -73,7 +95,7 @@ setEditId(0);
               ></textarea>
 
               <button className="addBtn" type="submit">
-              {editId?(<RiEditCircleFill/>):(<BsPlusCircleFill />)}
+                {editId ? <RiEditCircleFill /> : <BsPlusCircleFill />}
               </button>
             </form>
           </div>
@@ -88,12 +110,11 @@ setEditId(0);
                 >
                   <RiDeleteBinFill />
                 </button>
-                <button 
-                className="edit"
-                onClick={()=>HandleEdit(todos[index].id)}
+                <button
+                  className="edit"
+                  onClick={() => HandleEdit(todos[index].id)}
                 >
-                 <RiEditCircleFill/>
-                  
+                  <RiEditCircleFill />
                 </button>
               </div>
               <p className="text">{item.input}</p>
